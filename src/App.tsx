@@ -3,6 +3,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register'; // <-- Importe aqui
 import { DashboardPaciente } from './pages/DashboardPaciente';
+import { DashboardNutricionista } from './pages/DashboardNutricionista';
 
 export function App() {
   return (
@@ -13,7 +14,7 @@ export function App() {
           <Route path="/register" element={<Register />} /> {/* <-- Nova rota aqui */}
           
           <Route path="/painel-paciente" element={<DashboardPaciente />} />
-          <Route path="/painel-nutricionista" element={<h2>Painel do Nutricionista</h2>} />
+          <Route path="/painel-nutricionista" element={<DashboardNutricionista />} />
           
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
