@@ -42,7 +42,6 @@ export function MealModal({ isOpen, onClose, selectedDate, onSuccess }: MealModa
     fatPer100g: ''
   });
 
-  // 1. O useEffect agora tem a sua própria função isolada
   useEffect(() => {
     let isMounted = true;
 
@@ -84,7 +83,6 @@ export function MealModal({ isOpen, onClose, selectedDate, onSuccess }: MealModa
   }
 
  async function handleCreateFood() {
-    // Validação básica para garantir que não vão valores vazios
     if (!newFood.name || !newFood.caloriesPer100g || !newFood.proteinPer100g || !newFood.carbsPer100g || !newFood.fatPer100g) {
       alert("Por favor, preencha todos os campos nutricionais.");
       return;
@@ -101,7 +99,6 @@ export function MealModal({ isOpen, onClose, selectedDate, onSuccess }: MealModa
 
       const createResponse = await api.post('/api/foods', payload);
       
-      // Busca a lista atualizada
       const listResponse = await api.get('/api/foods/search', {
         params: { page: 0, size: 100 }
       });
@@ -112,25 +109,20 @@ export function MealModal({ isOpen, onClose, selectedDate, onSuccess }: MealModa
       if (createdId) {
         setSelectedFoodId(createdId);
       } else {
-        // Fallback caso a API não devolva o ID no POST
         const found = updatedFoods.find((f: Food) => f.name === newFood.name);
         if (found) setSelectedFoodId(found.id);
       }
 
-      // Limpa e fecha
       setNewFood({ name: '', caloriesPer100g: '', proteinPer100g: '', carbsPer100g: '', fatPer100g: '' });
       setIsCreatingFood(false);
 
     } catch (error) {
-      // Aqui vamos capturar o motivo exato da falha
       if (axios.isAxiosError(error) && error.response) {
         console.error("Erro do servidor:", error.response.data);
         
-        // Se o erro for um texto (como no login)
         if (typeof error.response.data === 'string') {
           alert(`Erro do servidor: ${error.response.data}`);
         } else {
-          // Se o Spring Boot devolver um objeto JSON com erros de validação
           alert(`Erro de validação! Verifique a consola do navegador para mais detalhes.`);
         }
       } else {

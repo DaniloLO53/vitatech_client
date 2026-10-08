@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { api } from '../services/api';
 import { AuthContext } from '../contexts/AuthContext';
-import './Login.css'; // Importando os estilos modernos
+import './Login.css'; 
 
 
 export function Login() {
@@ -55,7 +55,6 @@ export function Login() {
     <div className="login-container">
       <div className="login-card">
         
-        {/* Cabeçalho da área de Saúde */}
         <h1 className="login-logo">VitaTech</h1>
         <p className="login-subtitle">Nutrição e Bem-estar ao seu alcance</p>
         

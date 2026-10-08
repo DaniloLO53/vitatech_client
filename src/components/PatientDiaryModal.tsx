@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 
-// Tipagens (iguais às do paciente, mas apenas para leitura)
 type FoodItem = {
   quantityGrams: number;
   food: { name: string; caloriesPer100g: number; };
@@ -41,7 +40,6 @@ export function PatientDiaryModal({ isOpen, onClose, patientId, patientName }: P
     async function fetchPatientDiary() {
       setIsLoading(true);
       try {
-        // ATENÇÃO: Ajuste estes endpoints para baterem certo com o seu Controller do Spring Boot
         const [mealsRes, workoutsRes] = await Promise.all([
           api.get(`/api/meals/patient/${patientId}`, { params: { date: selectedDate } }),
           api.get(`/api/activities/patient/${patientId}`, { params: { date: selectedDate } })
@@ -93,7 +91,6 @@ export function PatientDiaryModal({ isOpen, onClose, patientId, patientName }: P
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
-            {/* SECÇÃO ALIMENTAÇÃO */}
             <div>
               <h3 style={{ borderBottom: '2px solid #10b981', paddingBottom: '5px', color: '#064e3b' }}>Alimentação</h3>
               {meals.length === 0 ? (
@@ -120,7 +117,6 @@ export function PatientDiaryModal({ isOpen, onClose, patientId, patientName }: P
               )}
             </div>
 
-            {/* SECÇÃO TREINOS */}
             <div>
               <h3 style={{ borderBottom: '2px solid #3b82f6', paddingBottom: '5px', color: '#1e3a8a' }}>Atividade Física</h3>
               {workouts.length === 0 ? (

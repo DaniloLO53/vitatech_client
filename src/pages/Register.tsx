@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { api } from '../services/api';
 import { AuthContext } from '../contexts/AuthContext';
-import './Login.css'; // Reutilizamos o mesmo ficheiro de estilos!
+import './Login.css'; 
 
 export function Register() {
   const [name, setName] = useState('');
@@ -24,7 +24,6 @@ export function Register() {
     setIsLoading(true);
 
     try {
-      // Chamada à API para registar conforme a especificação[cite: 1]
       const response = await api.post('/api/auth/register', {
         name,
         email,
@@ -32,11 +31,9 @@ export function Register() {
         role
       });
 
-      // A API já devolve o token e os dados no registo, logo podemos fazer auto-login[cite: 1]
       const { token, name: userName, role: userRole, id } = response.data;
       signIn(token, { name: userName, role: userRole, id });
 
-      // Redireciona com base na role[cite: 3]
       if (userRole === 'NUTRITIONIST') {
         navigate('/painel-nutricionista');
       } else {
@@ -46,7 +43,7 @@ export function Register() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response && error.response.data) {
-          setErrorMessage(error.response.data); // Exibe mensagem em texto simples[cite: 3]
+          setErrorMessage(error.response.data);
         } else {
           setErrorMessage('Erro ao conectar com o servidor.');
         }
@@ -116,7 +113,6 @@ export function Register() {
               value={role}
               onChange={(e) => setRole(e.target.value as 'PATIENT' | 'NUTRITIONIST')}
               required
-              /* Adicionamos o mesmo estilo dos inputs para ficar uniforme */
               style={{
                 padding: '12px 14px',
                 border: '1px solid #d1d5db',

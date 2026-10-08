@@ -9,7 +9,6 @@ import { ActivityModal } from "../components/ActivityModal";
 import "./Dashboard.css";
 import { ChatModal } from "../components/ChatModal";
 
-// --- TIPAGENS ---
 type FoodItem = {
   id: number;
   quantityGrams: number;
@@ -64,7 +63,6 @@ export function DashboardPaciente() {
   const [isLoadingWorkouts, setIsLoadingWorkouts] = useState(false);
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
 
-  // --- ESTADOS DO ACOMPANHAMENTO ---
   const [connection, setConnection] = useState<NutritionistConnection | null>(
     null,
   );
@@ -76,7 +74,6 @@ export function DashboardPaciente() {
     type: "success" | "error";
   } | null>(null);
 
-  // Estados para a busca inteligente (Debounce)
   const [searchNutriName, setSearchNutriName] = useState("");
   const [nutriResults, setNutriResults] = useState<Nutritionist[]>([]);
   const [isSearchingNutri, setIsSearchingNutri] = useState(false);
@@ -84,7 +81,6 @@ export function DashboardPaciente() {
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  // 1. Efeito para buscar o Diário (Alimentação e Treinos)
   useEffect(() => {
     async function fetchDailyMeals() {
       setIsLoadingMeals(true);
@@ -118,7 +114,6 @@ export function DashboardPaciente() {
     fetchDailyWorkouts();
   }, [selectedDate]);
 
-  // 2. Efeito para buscar o Estado da Conexão ao carregar a página
   useEffect(() => {
     async function fetchConnection() {
       setIsLoadingConnection(true);
@@ -134,23 +129,18 @@ export function DashboardPaciente() {
     fetchConnection();
   }, []);
 
-  // 3. EFEITO DE DEBOUNCE PARA A BUSCA DE NUTRICIONISTAS
   useEffect(() => {
-    // Se o texto tiver menos de 3 letras, limpa os resultados para poupar processamento
     if (searchNutriName.trim().length < 3) {
       setNutriResults([]);
       return;
     }
 
-    // Só pesquisa se não houver um nutricionista já selecionado (para evitar pesquisar o nome inteiro após o clique)
     if (selectedNutriId) return;
 
     setIsSearchingNutri(true);
 
-    // O setTimeout aguarda 500ms antes de fazer o pedido ao back-end
     const delayDebounceFn = setTimeout(async () => {
       try {
-        // ATENÇÃO: Ajuste este URL se o seu endpoint de busca de profissionais for diferente
         const response = await api.get("/api/nutritionists/search", {
           params: { name: searchNutriName, page: 0, size: 10 },
         });
@@ -163,11 +153,9 @@ export function DashboardPaciente() {
       }
     }, 500); // 500ms de delay
 
-    // Limpeza do timeout se o utilizador continuar a escrever
     return () => clearTimeout(delayDebounceFn);
   }, [searchNutriName, selectedNutriId]);
 
-  // Função para enviar o convite
   async function handleRequestConnection() {
     if (!selectedNutriId) return;
     setIsRequesting(true);
@@ -221,7 +209,6 @@ export function DashboardPaciente() {
         </div>
 
         <div className="dashboard-grid">
-          {/* Card: Alimentação */}
           <div className="dashboard-card">
             <div className="card-header">
               <h2 className="card-title">Alimentação</h2>
@@ -309,7 +296,6 @@ export function DashboardPaciente() {
             </div>
           </div>
 
-          {/* Card: Treinos */}
           <div className="dashboard-card">
             <div className="card-header">
               <h2 className="card-title">Treinos</h2>
@@ -387,7 +373,6 @@ export function DashboardPaciente() {
             </div>
           </div>
 
-          {/* Card: Nutricionista */}
           <div className="dashboard-card">
             <div className="card-header">
               <h2 className="card-title">Acompanhamento</h2>
@@ -513,7 +498,7 @@ export function DashboardPaciente() {
                       value={searchNutriName}
                       onChange={(e) => {
                         setSearchNutriName(e.target.value);
-                        setSelectedNutriId(null); // Reseta o ID se o utilizador alterar o texto
+                        setSelectedNutriId(null);
                       }}
                     />
 
@@ -529,7 +514,6 @@ export function DashboardPaciente() {
                       </div>
                     )}
 
-                    {/* Lista suspensa (Dropdown) de Resultados */}
                     {nutriResults.length > 0 && !selectedNutriId && (
                       <ul
                         style={{
@@ -554,8 +538,8 @@ export function DashboardPaciente() {
                             key={nutri.id}
                             onClick={() => {
                               setSelectedNutriId(nutri.id);
-                              setSearchNutriName(nutri.name); // Preenche o campo com o nome completo
-                              setNutriResults([]); // Fecha a lista
+                              setSearchNutriName(nutri.name);
+                              setNutriResults([]);
                             }}
                             style={{
                               padding: "12px 15px",

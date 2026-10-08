@@ -9,14 +9,14 @@ type ChatMessageDTO = {
   senderId: number;
   receiverId: number;
   content: string;
-  sentAt?: string; // Atualizado para sentAt
-  isRead?: boolean; // Novo campo
+  sentAt?: string;
+  isRead?: boolean;
 };
 
 type ChatModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  otherUserId: number | null; // Alterado de connectionId para otherUserId
+  otherUserId: number | null;
   otherUserName: string;
   currentUserId: number | undefined;
 };
@@ -39,13 +39,10 @@ export function ChatModal({ isOpen, onClose, otherUserId, otherUserName, current
   useEffect(() => {
     if (!isOpen || !otherUserId || !currentUserId) return;
 
-    // 1. Carregar Histórico via REST
     api.get(`/api/chat/history/${otherUserId}`)
       .then(response => setMessages(response.data))
       .catch(error => console.error("Erro ao carregar histórico:", error));
 
-    // 2. Configurar a ligação WebSocket (STOMP)
-    // O token é geralmente necessário para o Spring Security autenticar o WebSocket
     const token = localStorage.getItem('token') || ''; 
     const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
     const WS_URL = backendUrl.replace('http', 'ws') + '/ws';
@@ -60,11 +57,9 @@ export function ChatModal({ isOpen, onClose, otherUserId, otherUserName, current
       },
       reconnectDelay: 5000,
       onConnect: () => {
-        // Inscreve-se no canal exclusivo do utilizador para receber mensagens
         client.subscribe('/user/queue/messages', (message) => {
           if (message.body) {
             const receivedMsg: ChatMessageDTO = JSON.parse(message.body);
-            // Só adiciona se a mensagem for referente à conversa atual
             if (receivedMsg.senderId === otherUserId || receivedMsg.receiverId === otherUserId) {
               setMessages(prev => [...prev, receivedMsg]);
             }
@@ -77,7 +72,7 @@ export function ChatModal({ isOpen, onClose, otherUserId, otherUserName, current
     setStompClient(client);
 
     return () => {
-      client.deactivate(); // Fecha a ligação quando o modal fecha
+      client.deactivate();
     };
   }, [isOpen, otherUserId, currentUserId]);
 
@@ -93,13 +88,11 @@ export function ChatModal({ isOpen, onClose, otherUserId, otherUserName, current
       content: newMessage,
     };
 
-    // Envia a mensagem via WebSocket para o Controller do Spring Boot (@MessageMapping)
     stompClient.publish({
-      destination: '/app/chat.send', // Substitua se o seu ApplicationDestinationPrefix for diferente
+      destination: '/app/chat.send',
       body: JSON.stringify(chatMessage)
     });
 
-    // Adiciona a mensagem localmente para feedback instantâneo
     setMessages(prev => [...prev, { ...chatMessage, id: Date.now(), sentAt: new Date().toISOString(), isRead: false }]);
     setNewMessage('');
   }
@@ -130,10 +123,8 @@ export function ChatModal({ isOpen, onClose, otherUserId, otherUserName, current
                     backgroundColor: isMine ? '#10b981' : '#f3f4f6', color: isMine ? 'white' : '#1f2937',
                     borderBottomRightRadius: isMine ? '2px' : '15px', borderBottomLeftRadius: isMine ? '15px' : '2px',
                   }}>
-                    {/* Texto da mensagem */}
                     <div style={{ wordBreak: 'break-word' }}>{msg.content}</div>
                     
-                    {/* ADICIONE A HORA EXATAMENTE AQUI, ABAIXO DO CONTENT */}
                     <div style={{ fontSize: '11px', marginTop: '4px', textAlign: 'right', color: isMine ? '#d1fae5' : '#9ca3af' }}>
                       {msg.sentAt ? new Date(msg.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                     </div>

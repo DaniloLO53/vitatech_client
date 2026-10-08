@@ -33,7 +33,6 @@ export function ActivityModal({ isOpen, onClose, selectedDate, onSuccess }: Acti
 
   useEffect(() => {
     if (isOpen) {
-      // Carrega os locais de prática
       api.get('/api/activities/locations')
         .then(response => {
           setLocations(response.data);
@@ -41,9 +40,8 @@ export function ActivityModal({ isOpen, onClose, selectedDate, onSuccess }: Acti
         })
         .catch(error => console.error("Erro ao carregar locais:", error));
 
-      // Carrega todo o catálogo de exercícios (sem passar o 'name' para trazer todos)[cite: 2]
       api.get('/api/activities/catalog/search', {
-        params: { page: 0, size: 100 } // Trazemos até 100 exercícios para o dropdown
+        params: { page: 0, size: 100 }
       })
         .then(response => {
           const fetchedActivities = response.data.content || response.data;
@@ -74,7 +72,7 @@ export function ActivityModal({ isOpen, onClose, selectedDate, onSuccess }: Acti
         performedAt: performedAtDate.toISOString()
       };
 
-      await api.post('/api/activities', payload); // Regista o treino[cite: 2]
+      await api.post('/api/activities', payload); 
       
       setDurationMinutes('');
       onSuccess();

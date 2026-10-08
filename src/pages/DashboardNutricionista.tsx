@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { api } from "../services/api";
-import "./Dashboard.css"; // Vamos reaproveitar os mesmos estilos do paciente
+import "./Dashboard.css"; 
 import { PatientDiaryModal } from "../components/PatientDiaryModal";
 import { ChatModal } from "../components/ChatModal";
 
@@ -15,7 +15,7 @@ type Patient = {
 type Connection = {
   id: number;
   status: "PENDING" | "ACTIVE" | "REJECTED";
-  patient: Patient; // O back-end deve devolver os dados do paciente que fez o pedido
+  patient: Patient;
 };
 
 export function DashboardNutricionista() {
@@ -31,17 +31,15 @@ export function DashboardNutricionista() {
   const [selectedPatientName, setSelectedPatientName] = useState("");
 
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatPatientId, setChatPatientId] = useState<number | null>(null); // Alterado aqui
+  const [chatPatientId, setChatPatientId] = useState<number | null>(null); 
   const [chatPatientName, setChatPatientName] = useState("");
 
-  // Busca todas as conexões vinculadas a este nutricionista
   async function fetchConnections() {
     setIsLoading(true);
     try {
       const response = await api.get("/api/connections/my-patient");
       const allConnections: Connection[] = response.data;
 
-      // Filtra os convites pendentes e os pacientes já aceites
       setPendingRequests(allConnections.filter((c) => c.status === "PENDING"));
       setActivePatients(allConnections.filter((c) => c.status === "ACTIVE"));
     } catch (error) {
@@ -55,13 +53,11 @@ export function DashboardNutricionista() {
     fetchConnections();
   }, []);
 
-  // Atualiza o estado do convite usando Query Parameters
   async function handleUpdateStatus(
     connectionId: number,
     newStatus: "ACTIVE" | "REJECTED",
   ) {
     try {
-      // Usamos PUT (ou POST, dependendo do seu Controller) e passamos o status na string do URL
       await api.put(
         `/api/connections/respond/${connectionId}?status=${newStatus}`,
       );
@@ -91,7 +87,6 @@ export function DashboardNutricionista() {
             gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
           }}
         >
-          {/* Cartão de Pedidos Pendentes */}
           <div className="dashboard-card">
             <div className="card-header">
               <h2 className="card-title">Convites Pendentes</h2>
@@ -294,7 +289,7 @@ export function DashboardNutricionista() {
                             fontWeight: "bold",
                           }}
                           onClick={() => {
-                            setChatPatientId(conn.patient.id); // Guardamos o ID do paciente
+                            setChatPatientId(conn.patient.id); 
                             setChatPatientName(conn.patient.name);
                             setIsChatOpen(true);
                           }}
@@ -322,7 +317,7 @@ export function DashboardNutricionista() {
           <ChatModal
             isOpen={isChatOpen}
             onClose={() => setIsChatOpen(false)}
-            otherUserId={chatPatientId} // Usamos a propriedade correta e a nova variável
+            otherUserId={chatPatientId}
             otherUserName={chatPatientName}
             currentUserId={user?.id}
           />

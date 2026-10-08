@@ -18,7 +18,6 @@ export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
-    // Recupera os dados ao recarregar a página
     const storedUser = localStorage.getItem("@VitaTech:user");
     const storedToken = localStorage.getItem("@VitaTech:token");
 
