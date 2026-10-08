@@ -3,7 +3,7 @@ import axios from "axios";
 export const api = axios.create({
   // Deixe vazio ou com '/' para que a requisição use a porta do front-end (5173)
   // e o Proxy do Vite faça o redirecionamento automático para a 8080
-  baseURL: "",
+  baseURL: import.meta.env.VITE_API_URL || "",
 });
 
 api.interceptors.request.use((config) => {

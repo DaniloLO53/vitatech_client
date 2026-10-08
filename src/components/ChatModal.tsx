@@ -47,7 +47,8 @@ export function ChatModal({ isOpen, onClose, otherUserId, otherUserName, current
     // 2. Configurar a ligação WebSocket (STOMP)
     // O token é geralmente necessário para o Spring Security autenticar o WebSocket
     const token = localStorage.getItem('token') || ''; 
-    const WS_URL = 'ws://localhost:8080/ws'; // Substitua pelo caminho configurado no seu WebSocketConfig do Spring
+    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+    const WS_URL = backendUrl.replace('http', 'ws') + '/ws';
 
     const client = new Client({
       brokerURL: WS_URL,
