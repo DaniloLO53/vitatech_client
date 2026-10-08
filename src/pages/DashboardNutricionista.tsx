@@ -4,6 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { api } from "../services/api";
 import "./Dashboard.css"; // Vamos reaproveitar os mesmos estilos do paciente
 import { PatientDiaryModal } from "../components/PatientDiaryModal";
+import { ChatModal } from "../components/ChatModal";
 
 type Patient = {
   id: number;
@@ -28,6 +29,10 @@ export function DashboardNutricionista() {
     null,
   );
   const [selectedPatientName, setSelectedPatientName] = useState("");
+
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatPatientId, setChatPatientId] = useState<number | null>(null); // Alterado aqui
+  const [chatPatientName, setChatPatientName] = useState("");
 
   // Busca todas as conexões vinculadas a este nutricionista
   async function fetchConnections() {
@@ -288,6 +293,11 @@ export function DashboardNutricionista() {
                             cursor: "pointer",
                             fontWeight: "bold",
                           }}
+                          onClick={() => {
+                            setChatPatientId(conn.patient.id); // Guardamos o ID do paciente
+                            setChatPatientName(conn.patient.name);
+                            setIsChatOpen(true);
+                          }}
                         >
                           💬 Chat
                         </button>
@@ -307,6 +317,14 @@ export function DashboardNutricionista() {
             }}
             patientId={selectedPatientId}
             patientName={selectedPatientName}
+          />
+
+          <ChatModal
+            isOpen={isChatOpen}
+            onClose={() => setIsChatOpen(false)}
+            otherUserId={chatPatientId} // Usamos a propriedade correta e a nova variável
+            otherUserName={chatPatientName}
+            currentUserId={user?.id}
           />
         </div>
       </main>

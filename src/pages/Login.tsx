@@ -27,8 +27,8 @@ export function Login() {
         password,
       });
 
-      const { token, name, role } = response.data;
-      signIn(token, { name, role });
+      const { token, name, role, id } = response.data;
+      signIn(token, { name, role, id });
 
       if (role === 'NUTRITIONIST') {
         navigate('/painel-nutricionista');

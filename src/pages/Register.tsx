@@ -33,8 +33,8 @@ export function Register() {
       });
 
       // A API já devolve o token e os dados no registo, logo podemos fazer auto-login[cite: 1]
-      const { token, name: userName, role: userRole } = response.data;
-      signIn(token, { name: userName, role: userRole });
+      const { token, name: userName, role: userRole, id } = response.data;
+      signIn(token, { name: userName, role: userRole, id });
 
       // Redireciona com base na role[cite: 3]
       if (userRole === 'NUTRITIONIST') {
