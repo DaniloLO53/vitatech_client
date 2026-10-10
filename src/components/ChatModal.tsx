@@ -43,7 +43,7 @@ export function ChatModal({ isOpen, onClose, otherUserId, otherUserName, current
       .then(response => setMessages(response.data))
       .catch(error => console.error("Erro ao carregar histórico:", error));
 
-    const token = localStorage.getItem('token') || ''; 
+    const token = localStorage.getItem('@VitaTech:token') || '';
     const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
     const WS_URL = backendUrl.replace('http', 'ws') + '/ws';
 
@@ -80,19 +80,20 @@ export function ChatModal({ isOpen, onClose, otherUserId, otherUserName, current
 
   function handleSendMessage(e: SyntheticEvent) {
     e.preventDefault();
+    console.log(currentUserId)
+    console.log(!newMessage.trim(), !otherUserId, !currentUserId, !stompClient)
     if (!newMessage.trim() || !otherUserId || !currentUserId || !stompClient || !stompClient.connected) return;
-
+    
     const chatMessage: ChatMessageDTO = {
       senderId: currentUserId,
       receiverId: otherUserId,
       content: newMessage,
     };
-
+    
     stompClient.publish({
       destination: '/app/chat.send',
       body: JSON.stringify(chatMessage)
     });
-
     setMessages(prev => [...prev, { ...chatMessage, id: Date.now(), sentAt: new Date().toISOString(), isRead: false }]);
     setNewMessage('');
   }

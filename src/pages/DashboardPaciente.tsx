@@ -51,6 +51,8 @@ type Nutritionist = {
 export function DashboardPaciente() {
   const { user, signOut } = useContext(AuthContext);
 
+  console.log("User id", user?.id)
+
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0],
   );

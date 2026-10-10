@@ -21,6 +21,8 @@ type Connection = {
 export function DashboardNutricionista() {
   const { user, signOut } = useContext(AuthContext);
 
+  console.log("User id", user?.id)
+
   const [pendingRequests, setPendingRequests] = useState<Connection[]>([]);
   const [activePatients, setActivePatients] = useState<Connection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
