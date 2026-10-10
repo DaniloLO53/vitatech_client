@@ -37,9 +37,13 @@ type Workout = {
   location?: { name: string };
 };
 
+
 type NutritionistConnection = {
-  id: number;
-  status: "PENDING" | "ACCEPTED" | "REJECTED";
+  nutritionistId: number;
+  nutritionistName: string;
+  patientId: number;
+  patientName: string;
+  status: "PENDING" | "ACTIVE" | "REJECTED";
   nutritionist: { id: number; name: string };
 };
 
@@ -50,8 +54,6 @@ type Nutritionist = {
 
 export function DashboardPaciente() {
   const { user, signOut } = useContext(AuthContext);
-
-  console.log("User id", user?.id)
 
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0],
@@ -121,7 +123,8 @@ export function DashboardPaciente() {
       setIsLoadingConnection(true);
       try {
         const response = await api.get("/api/connections/my-nutritionist");
-        if (response.data && response.data.id) setConnection(response.data);
+        console.log("NUTRI", response.data)
+        if (response.data && response.data.nutritionistId) setConnection(response.data);
       } catch (error) {
         console.log("Sem vínculo atual.");
       } finally {
@@ -389,8 +392,8 @@ export function DashboardPaciente() {
               }}
             >
               {isLoadingConnection ? (
-                <div className="empty-state">A verificar vínculo...</div>
-              ) : connection?.status === "ACCEPTED" ? (
+                <div className="empty-state">Verificando vínculo...</div>
+              ) : connection?.status === "ACTIVE" ? (
                 <div className="empty-state" style={{ padding: "0" }}>
                   <div
                     style={{
@@ -414,7 +417,7 @@ export function DashboardPaciente() {
                       margin: "0 0 20px 0",
                     }}
                   >
-                    {connection.nutritionist.name}
+                    {connection.nutritionistName}
                   </p>
                   <button
                     className="btn-submit"
@@ -453,7 +456,7 @@ export function DashboardPaciente() {
                       margin: "5px 0 0 0",
                     }}
                   >
-                    {connection.nutritionist.name}
+                    {connection.nutritionistName}
                   </p>
                 </div>
               ) : (
@@ -597,8 +600,8 @@ export function DashboardPaciente() {
       <ChatModal 
         isOpen={isChatOpen} 
         onClose={() => setIsChatOpen(false)} 
-        otherUserId={connection?.nutritionist.id || null} 
-        otherUserName={connection?.nutritionist.name || ''} 
+        otherUserId={connection?.nutritionistId || null} 
+        otherUserName={connection?.nutritionistName || ''} 
         currentUserId={user?.id} 
       />
     </div>
