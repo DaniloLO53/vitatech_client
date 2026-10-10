@@ -75,7 +75,7 @@ export function DashboardNutricionista() {
       <header className="dashboard-header">
         <h1 className="dashboard-logo">VitaTech Pro</h1>
         <div className="header-user">
-          <span className="user-greeting">Dr(a). {user?.name}</span>
+          <span className="user-greeting">{user?.name}</span>
           <button onClick={signOut} className="btn-logout">
             Sair
           </button>
