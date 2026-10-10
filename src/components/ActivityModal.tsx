@@ -89,7 +89,7 @@ export function ActivityModal({ isOpen, onClose, selectedDate, onSuccess }: Acti
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h2>Registar Treino</h2>
+          <h2>Registrar Treino</h2>
           <button onClick={onClose} className="btn-close">&times;</button>
         </div>
 

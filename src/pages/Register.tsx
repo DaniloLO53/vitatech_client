@@ -129,7 +129,7 @@ export function Register() {
           </div>
 
           <button type="submit" className="btn-submit" disabled={isLoading}>
-            {isLoading ? 'A registar...' : 'Criar Conta'}
+            {isLoading ? 'A registrar...' : 'Criar Conta'}
           </button>
         </form>
 

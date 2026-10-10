@@ -181,7 +181,7 @@ export function MealModal({ isOpen, onClose, selectedDate, onSuccess }: MealModa
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h2>Registar Refeição</h2>
+          <h2>Registrar Refeição</h2>
           <button type="button" onClick={handleClose} className="btn-close">&times;</button>
         </div>
 
